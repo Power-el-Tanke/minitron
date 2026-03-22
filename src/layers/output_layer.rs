@@ -33,7 +33,7 @@ impl  <T: Clone> OutputLayer <T> {
     }
     
     fn fresh<I, R>(labels: I , rng: &mut R) -> Self
-    where
+      where
         I: IntoIterator<Item=Label<T>>,
         R: Random
     {
@@ -42,5 +42,12 @@ impl  <T: Clone> OutputLayer <T> {
                          .map(|x| OutputNode::new(x, rng))
                          .collect(),
         }
+    }
+    
+    pub fn learn(&mut self, prev_out: &[f32], prev_err: &[f32], rate: f32) {
+      let len = self.nodes.len();
+      for i in 0..len {
+        self.nodes[i].learn(prev_out[i], prev_err[i], rate);
+      }
     }
 }

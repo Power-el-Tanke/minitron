@@ -36,7 +36,7 @@ impl <T: Clone> OutputNode<T> {
         self.label = self.label.to_usage();
     }
     
-    fn learn(&mut self, out: f32, err: f32, rate: f32) {
+    pub fn learn(&mut self, out: f32, err: f32, rate: f32) {
         let local_gradient = self.local_gradient(out,err);
         self.bias -= rate * local_gradient;
     }
