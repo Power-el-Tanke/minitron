@@ -12,7 +12,7 @@ pub struct OutputLayer <T: Clone> {
 }
 
 impl <T: Clone> Layer<OutputNode<T>> for OutputLayer <T> {
-    fn forward_prop(&self, input: &[f32]) -> Vec<f32> {
+    pub fn forward_prop(&self, input: &[f32]) -> Vec<f32> {
         self.nodes
             .iter()
             .zip(input)
@@ -32,7 +32,7 @@ impl  <T: Clone> OutputLayer <T> {
         &self.nodes[max]
     }
     
-    fn fresh<I, R>(labels: I , rng: &mut R) -> Self
+    pub fn fresh<I, R>(labels: I , rng: &mut R) -> Self
       where
         I: IntoIterator<Item=Label<T>>,
         R: Random

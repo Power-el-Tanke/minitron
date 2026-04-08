@@ -9,7 +9,7 @@ pub struct HiddenLayer {
 }
 
 impl HiddenLayer {
-    fn learn(&mut self, rate: f32, outs: &[f32], errs: &[f32]) -> Vec<f32> {
+    pub fn learn(&mut self, rate: f32, outs: &[f32], errs: &[f32]) -> Vec<f32> {
         let mut output = Vec::with_capacity(self.nodes.len());
         for i in 0..self.nodes.len() {
             output[i] = self.nodes[i].learn(outs[i],rate, errs[i],);
@@ -17,7 +17,7 @@ impl HiddenLayer {
         output
     }
     
-    fn fresh<R: Random>(ammount: usize, rng: &mut R) -> Self{
+    pub fn fresh<R: Random>(ammount: usize, rng: &mut R) -> Self{
         HiddenLayer {
             nodes: repeat_with(|| HiddenNode::new(rng)).take(ammount).collect::<Vec<_>>(),
         }
