@@ -12,7 +12,7 @@ pub struct OutputLayer <T: Clone> {
 }
 
 impl <T: Clone> Layer<OutputNode<T>> for OutputLayer <T> {
-    pub fn forward_prop(&self, input: &[f32]) -> Vec<f32> {
+    fn forward_prop(&self, input: &[f32]) -> Vec<f32> {
         self.nodes
             .iter()
             .zip(input)
@@ -49,5 +49,10 @@ impl  <T: Clone> OutputLayer <T> {
       for i in 0..len {
         self.nodes[i].learn(prev_out[i], prev_err[i], rate);
       }
+    }
+    
+    #[inline]
+    pub fn len(&self) -> usize {
+      self.nodes.len()
     }
 }
