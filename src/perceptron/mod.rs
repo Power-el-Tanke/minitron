@@ -1,19 +1,18 @@
 use std::iter::repeat_with;
 use crate::{
     layers::output_layer::OutputLayer,
-    layers::input_layer::InputLayer,
     layers::hidden_layer::HiddenLayer,
     conn::WeightMatrix,
     learning_rate::LearningRateManager,
     nodes::label::Label,
     RandomGen,
     Random,
+    layers::layer::Layer,
 };
 
 pub struct Perceptron<T: Clone> {
     rng: RandomGen,
     learning_rate: f32,
-    input_layer: InputLayer,
     hidden_layers: Vec<HiddenLayer>,
     output_layer: OutputLayer<T>,
     connections: Vec<WeightMatrix>,
@@ -30,7 +29,6 @@ impl<T: Clone> Perceptron<T>{
   where 
     I: IntoIterator<Item=Label<T>>
   {
-    let input_layer = InputLayer::new(input_size);
     let hidden_layers = repeat_with(||HiddenLayer::fresh(hiddenl_size, &mut rng))
                           .take(hiddenl_num)
                           .collect::<Vec<_>>();
@@ -44,11 +42,27 @@ impl<T: Clone> Perceptron<T>{
     Self {
       rng,
       learning_rate: 1.0,
-      input_layer,
       hidden_layers,
       output_layer,
       connections,
     }
+  }
+  
+  pub fn just_compute(&self, input: &[f32]) -> Vec<f32> {
+    let mut aux_vec = self.connections[0].compute(input);
+    let iterations = self.hidden_layers.len();
+    for i in 1 .. iterations {
+      let layer_comp = self.hidden_layers[i - 1].forward_prop(&aux_vec);
+      aux_vec = self.connections[i].compute(&layer_comp);
+    }
+    self.output_layer.forward_prop(
+      &self.connections[iterations].compute(&aux_vec)
+    )
+  }
+  
+  #[inline]
+  pub fn input_size(&self) -> usize {
+    self.connections[0].input_len()
   }
 }
 

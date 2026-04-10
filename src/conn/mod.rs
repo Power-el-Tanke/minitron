@@ -3,6 +3,11 @@ use crate::Random;
 pub struct WeightMatrix(Vec<Vec<f32>>);
 
 impl WeightMatrix{
+    #[inline]
+    pub fn input_len(&self) -> usize {
+      self.0.len()
+    }
+
     pub fn new(left_size: usize, right_size: usize, rng:&mut impl Random) -> Self{
         let mut matrix = vec![Vec::with_capacity(right_size); left_size];
         for i in 0..left_size {

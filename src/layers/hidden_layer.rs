@@ -2,10 +2,21 @@ use std::iter::repeat_with;
 use crate::{
     Random,
     nodes::hidden_node::HiddenNode,
+    layers::layer::Layer,
 };
 
 pub struct HiddenLayer {
     nodes: Vec<HiddenNode>,
+}
+
+impl Layer<HiddenNode> for HiddenLayer {
+    fn forward_prop(&self, input: &[f32]) -> Vec<f32> {
+        self.nodes
+            .iter()
+            .zip(input)
+            .map(|(x,y)| x.activation(*y))
+            .collect()
+    }
 }
 
 impl HiddenLayer {
